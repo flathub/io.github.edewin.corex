@@ -2,36 +2,29 @@ app-id: io.github.edewin.corex
 runtime: org.kde.Platform
 runtime-version: '6.10'
 sdk: org.kde.Sdk
-base: com.riverbankcomputing.PyQt.BaseApp
+base: io.qt.PySide.BaseApp
 base-version: '6.10'
 command: corex
 
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
- 
+
 build-options:
   env:
     - BASEAPP_REMOVE_WEBENGINE=1
 
 finish-args:
+  # the floating widget needs X11 to be moved and kept above other windows
   - --socket=x11
   - --share=ipc
+  # GPU counters (NVIDIA NVML, AMD/Intel sysfs)
   - --device=all
+  # temperatures, fans, voltages, disks and network counters
   - --filesystem=/sys:ro
+  # network counters of the real interfaces (CoreX itself never connects anywhere)
   - --share=network
-  
-modules:
-  - name: lm-sensors
-    no-autogen: true
-    make-install-args:
-      - PREFIX=/app
-      - ETCDIR=/app/etc
-    sources:
-      - type: git
-        url: https://github.com/lm-sensors/lm-sensors.git
-        tag: V3-6-0
-        commit: 1667b850a1ce38151dae17156276f981be6fb557
 
+modules:
   - generated-sources.json
 
   - name: corex
@@ -39,9 +32,10 @@ modules:
     sources:
       - type: git
         url: https://github.com/Edewin/corex.git
-        commit: 9a58e5e8877b0285728e796fa85ea0b3b2c45cc5
+        tag: v2.0.0
+        commit: 3180dc128534541916f81d9f9b0825852aeb05fc
     build-commands:
-      - pip3 install --no-index --find-links . --prefix=/app --no-build-isolation .
+      - pip3 install --no-index --find-links . --prefix=/app --no-build-isolation --no-deps .
       - install -Dm644 io.github.edewin.corex.desktop /app/share/applications/io.github.edewin.corex.desktop
       - install -Dm644 corex/assets/corex_icon.svg /app/share/icons/hicolor/scalable/apps/io.github.edewin.corex.svg
       - install -Dm644 io.github.edewin.corex.metainfo.xml /app/share/metainfo/io.github.edewin.corex.metainfo.xml
