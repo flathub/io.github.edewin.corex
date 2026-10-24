@@ -24,7 +24,6 @@ finish-args:
   # network counters of the real interfaces (CoreX itself never connects anywhere)
   - --share=network
   # alerts as desktop notifications, and the tray icon
-  - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 
 modules:
@@ -35,8 +34,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/Edewin/corex.git
-        tag: v2.3.0
-        commit: fd16d6402ca5b8bdf0ac494ff996e804558e9c39
+        tag: v2.3.1
+        commit: e5cbd26040771304f54d03cf72e9f4a6b4ad1ad9
     build-commands:
       - pip3 install --no-index --find-links . --prefix=/app --no-build-isolation --no-deps .
       - install -Dm644 io.github.edewin.corex.desktop /app/share/applications/io.github.edewin.corex.desktop
